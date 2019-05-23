@@ -176,6 +176,15 @@ FROM location loc
 WHERE loc.location_id = lh.location_id;
 
 UPDATE
+       location_hierarchy lh
+SET facility_name = (SELECT facility FROM location_hierarchy1 WHERE location_hierarchy1.zone = lh.facility_name)
+WHERE lh.facility_name LIKE '%Zone%';
+
+UPDATE
+       location_hierarchy lh
+SET facility_name = (CASE WHEN lh.facility_name SIMILAR TO 'so %|we %' THEN substring(lh.facility_name from 4) ELSE lh.facility_name END);
+
+UPDATE
   location_hierarchy lh
 SET
   district_id  = loc.parent_location
