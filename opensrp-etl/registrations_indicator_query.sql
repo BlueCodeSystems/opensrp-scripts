@@ -22,9 +22,7 @@ INSERT INTO birth_registration (
 TO_CHAR(dfs.value :: TIMESTAMP :: DATE, 'YYYY-MM-DD')::date,
     CLIENT.date_created :: TIMESTAMP,
     COALESCE((loc.location_id), tl.location_id),
-    CASE WHEN COALESCE((loc.name), tln.name) SIMILAR TO 'so %|we %'
-      THEN substring(COALESCE((loc.name), tln.name) FROM 4)
-    ELSE COALESCE((loc.name), tln.name) END,
+      (SELECT facility_name FROM location_hierarchy WHERE location_hierarchy.location_id = loc.location_id),
     COALESCE((usr.person_id :: VARCHAR), bev.provider_id),
     CASE WHEN usr.person_id IS NOT NULL
       THEN
@@ -103,6 +101,8 @@ SET
   province = loc.parent_location
 FROM location loc
 WHERE loc.location_id = frr.district :: INTEGER;
+
+
 UPDATE
   birth_registration frr
 SET
