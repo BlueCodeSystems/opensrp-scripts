@@ -175,9 +175,15 @@ district_name  = loc.parent_location
 FROM location loc
 WHERE loc.location_id = lh.location_id;
 
+CREATE TABLE facility_zone_hierarchy AS 
+SELECT l1.name as zone, l2.name as facility
+FROM location l1 
+left outer join location l2 on l1.parent_location = l2.location_id
+WHERE l1.location_id IN (SELECT location_id FROM  location_tag_map WHERE location_tag_id = 5);
+
 UPDATE
        location_hierarchy lh
-SET facility_name = (SELECT facility FROM location_hierarchy1 WHERE location_hierarchy1.zone = lh.facility_name)
+SET facility_name = (SELECT facility FROM facility_zone_hierarchy WHERE facility_zone_hierarchy.zone = lh.facility_name)
 WHERE lh.facility_name LIKE '%Zone%';
 
 UPDATE
