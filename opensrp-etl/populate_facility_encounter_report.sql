@@ -175,7 +175,7 @@ district_name  = loc.parent_location
 FROM location loc
 WHERE loc.location_id = lh.location_id;
 
-CREATE TABLE facility_zone_hierarchy AS 
+CREATE TABLE IF NOT EXISTS facility_zone_hierarchy AS 
 SELECT l1.name as zone, l2.name as facility
 FROM location l1 
 left outer join location l2 on l1.parent_location = l2.location_id
